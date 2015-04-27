@@ -44,7 +44,8 @@ Add a class that represents the application. It has instance variables for
 the different parts. 
 
 \begin{verbatim}
-Object subclass: #MorphicDraw    instanceVariableNames: 'window tools dock'
+Object subclass: #MorphicDraw
+    instanceVariableNames: 'window tools dock'
     classVariableNames: ''
     category: 'MorphicDraw-Model'
 \end{verbatim}
@@ -69,7 +70,11 @@ The MorphicDraw application uses the first, but needs to change
 the window title and default size.
 
 \begin{verbatim}
-MorphicDraw>>createWindow    window := StandardWindow new        setLabel: 'MorphicDraw';        extent: 400@400;        yourself.
+MorphicDraw>>createWindow
+    window := StandardWindow new
+        setLabel: 'MorphicDraw';
+        extent: 400@400;
+        yourself.
 \end{verbatim}
 
 StandardWindow is part of PolyMorph. PolyMorph extends Morphic
@@ -85,7 +90,15 @@ MorphicDraw uses two buttons to be able to create two different
 graphical shapes.
 
 \begin{verbatim}
-MorphicDraw>>createNewCardButton    ^ window        newButtonFor: self        getState: nil        action: #newCard        arguments: nil        getEnabled: nil        labelForm: MDIcons default cardIcon        help: 'New Card' translated
+MorphicDraw>>createNewCardButton
+    ^ window
+        newButtonFor: self
+        getState: nil
+        action: #newCard
+        arguments: nil
+        getEnabled: nil
+        labelForm: MDIcons default cardIcon
+        help: 'New Card' translated
 \end{verbatim}
 The help text is shown when hovering the mouse over the button.
 The button is always enabled, and sends the \#newCard message 
@@ -95,7 +108,25 @@ is provided by MDIcons default cardIcon (see the Icons section,  p. \pageref{Ico
 
 The button for the other shape is similar:
 \begin{verbatim}
-MorphicDraw>>createNewRectangleButton    ^ window        newButtonFor: self        getState: nil        action: #newRectangle        arguments: nil        getEnabled: nil        labelForm: MDIcons default rectangleIcon        help: 'New Rectangle' translated
+MorphicDraw>>createNewRectangleButton
+    ^ window
+        newButtonFor: self
+        getState: nil
+        action: #newRectangle
+        arguments: nil
+        getEnabled: nil
+        labelForm: MDIcons default rectangleIcon
+        help: 'New Rectangle' translated
+\end{verbatim}
+
+The newCard and newRectangle are implemented by creating a
+new morph of the right kind and opening it in the hand. Both MDShape is a
+subclass of BorderedMorph and MDCard a subclass of MDShape.
+
+\begin{verbatim}
+MorphicDraw>>newCard    ^MDCard new openInHand
+
+MorphicDraw>>newRectangle    ^MDShape new openInHand
 \end{verbatim}
 
 A toolbar in Morphic consists of two parts, a ToolDockingBar and
@@ -103,15 +134,40 @@ a Toolbar. The Toolbar is added to the dock. A DockingBarMorph
 sticks to one edge of the Morph that it is added to.
 
 \begin{verbatim}
-MorphicDraw>>createToolBar    tools := window newToolbar: (Array with: self createNewRectangleButton with: self createNewCardButton).
+MorphicDraw>>createToolBar
+    tools := window newToolbar: (Array with: self createNewRectangleButton with: self createNewCardButton).
     dock := window newToolDockingBar.
     dock addMorph: tools
 \end{verbatim}
+This allows the creation and opening of the window
+\begin{verbatim}
+MorphicDraw>>open     self createWindow.     self createToolBar.     window         addMorph: dock            fullFrame: ((0@0 corner: 1@0) asLayoutFrame bottomOffset: dock minExtent y);        addMorph: MDPanel new 			            fullFrame: ((0@0 corner: 1@1) asLayoutFrame topOffset: dock minExtent y).    ^window openInWorld.
+\end{verbatim}
+Some morphs automatically lay out their submorphs when they are added,
+others need to add an explicit layout strategy. The toolbar adds its toolbar buttons
+from left to right without a space.  
+The toolbar dock by default takes up the top edge of the morph it is added to. 
+For a window that is the area with the drag bar, title and window icons. 
+A LayoutFrame that should fit the whole contents area of the window is
+created using a rectangle from 0@0 to 1@1.
+\begin{verbatim}
+(0@0 corner: 1@1) asLayoutFrame.   
+\end{verbatim}
+The left half would be (0@0 corner: 0.5@1).
+Space can be left at a side by using the bottom/top/left/rightOffset.
+The dock knows its minimum height
+\begin{verbatim}
+dock minExtent y
+\end{verbatim}
+so uses a layout frame based on the top line, extending it at its bottom
+by the dock height. The MDPanel is a PasteUpMorph subclass containing
+all the drawing shapes.
 
 At the class side add a method to open the application
 
 \begin{verbatim}
-MorphicDraw>>open    ^self new open
+MorphicDraw>>open
+    ^self new open
 \end{verbatim}
 
 \section{Icons\label{Icons}}
@@ -125,21 +181,29 @@ Create the png icons in an external program
 (these were created with Gimp), store them in a directory.
 Create a subclass of ThemeIcons
 \begin{verbatim}
-ThemeIcons subclass: #MDIcons     instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+ThemeIcons subclass: #MDIcons
+    instanceVariableNames: ''
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 Add two methods containing the names for small- and normal sized icons
 \begin{verbatim}
-MDIcons>>normalSizeNames    "Answer the names of the normal icons"    ^#('rectangle' 'connector' 'card')
+MDIcons>>normalSizeNames
+    "Answer the names of the normal icons"
+    ^#('rectangle' 'connector' 'card')
 
-MDIcons>>smallSizeNames    "Answer the names of the small icons. None"
+MDIcons>>smallSizeNames
+    "Answer the names of the small icons. None"
     ^#()
 \end{verbatim}
 Provide a default instance of this class. At the class side, add 
 a class instance variable and a lazy accessor
 \begin{verbatim}
-MDIcons class    instanceVariableNames: 'default'
+MDIcons class
+    instanceVariableNames: 'default'
 
-MDIcons class>>default    ^default ifNil: [ ^self new ]
+MDIcons class>>default
+    ^default ifNil: [ ^self new ]
 \end{verbatim}
 Now add the icons using a utility method. In a workspace, DoIt
 with directory replaced by the fully qualified path name of the
@@ -154,7 +218,7 @@ so the icons can be tested by DoIt
 MDIcons default connectorIcon asMorph openInWorld
 \end{verbatim}
 This opens an ImageMorph with the icon in the World (Fig. \ref{iconhalos}). 
-By selecting it with shift-alt, its halos are shown. 
+By selecting it with shift-alt, its halos are shown. With the cross halo the icon can be deleted. 
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=150pt]{ImageIcon.png}
@@ -162,7 +226,11 @@ By selecting it with shift-alt, its halos are shown.
 \label{iconhalos}
 \end{center}
 \end{figure}
-With the cross halo the icon can be deleted. 
+
+By having the resource contents in a method, the normal version
+control can be used and there is no need for specific resource
+management. This works well when the resources are small and can be
+manipulated in the image, like png icons.  
 \section{Shapes and PasteUpMorph}
 
 \section{Toolbar}
