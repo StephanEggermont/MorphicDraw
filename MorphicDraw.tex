@@ -72,7 +72,10 @@ the window title and default size.
 MorphicDraw>>createWindow    window := StandardWindow new        setLabel: 'MorphicDraw';        extent: 400@400;        yourself.
 \end{verbatim}
 
-StandardWindow is part of PolyMorph. PolyMorph makes the 
+StandardWindow is part of PolyMorph. PolyMorph extends Morphic
+with theme-ability. PolyMorph widgets often strictly adhere to the theme,
+ignoring the Morphic-level setters for colors and borders defined in
+their superclassses.  PolyMorph makes the 
 Window responsible for adding predefined user interface widgets
 to the application Window. For that it uses the TEasilyThemed 
 trait. It adds a lot (163 in my current image) of convenience methods.
@@ -88,7 +91,7 @@ The help text is shown when hovering the mouse over the button.
 The button is always enabled, and sends the \#newCard message 
 without any arguments to self when it is pressed. It has no 
 state-dependent behaviour or shape. The icon for the button
-is provided by MDIcons default cardIcon.
+is provided by MDIcons default cardIcon (see the Icons section,  p. \pageref{Icons}).
 
 The button for the other shape is similar:
 \begin{verbatim}
@@ -96,12 +99,13 @@ MorphicDraw>>createNewRectangleButton    ^ window        newButtonFor: self  
 \end{verbatim}
 
 A toolbar in Morphic consists of two parts, a ToolDockingBar and
-a Toolbar. The Toolbar is added 
+a Toolbar. The Toolbar is added to the dock. A DockingBarMorph 
+sticks to one edge of the Morph that it is added to.
 
 \begin{verbatim}
 MorphicDraw>>createToolBar    tools := window newToolbar: (Array with: self createNewRectangleButton with: self createNewCardButton).
     dock := window newToolDockingBar.
-    dock addMorphBack: tools
+    dock addMorph: tools
 \end{verbatim}
 
 At the class side add a method to open the application
@@ -109,6 +113,42 @@ At the class side add a method to open the application
 \begin{verbatim}
 MorphicDraw>>open    ^self new open
 \end{verbatim}
+
+\section{Icons\label{Icons}}
+The current icons in Pharo are bitmap icons. Athens makes it possible
+to replace them by SVG, vector based icons. PolyMorph adds the 
+ThemeIcons class to make it easy to manage an applications' icons.
+In this class a number of utility functions are defined to load and save
+icons in png format. 
+
+Create the png icons in an external program
+(these were created with Gimp), store them in a directory.
+Create a subclass of ThemeIcons
+\begin{verbatim}
+ThemeIcons subclass: #MDIcons     instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+Add two methods containing the names for small- and normal sized icons
+\begin{verbatim}
+MDIcons>>normalSizeNames    "Answer the names of the normal icons"    ^#('rectangle' 'connector' 'card')
+
+MDIcons>>smallSizeNames    "Answer the names of the small icons. None"
+    ^#()
+\end{verbatim}
+Provide a default instance of this class. At the class side, add 
+a class instance variable and a lazy accessor
+\begin{verbatim}
+MDIcons class    instanceVariableNames: 'default'
+
+MDIcons class>>default    ^default ifNil: [ ^self new ]
+\end{verbatim}
+Now add the icons using a utility method. In a workspace, DoIt
+with directory replaced by the fully qualified path name of the
+directory containing the icon png files:
+\begin{verbatim}
+MDIcons default createIconMethodsFromDirectory: directory 
+\end{verbatim}
+This adds two methods for each png file, one with a base64 encoded
+contents and one icon form accessor.
 
 \section{Shapes and PasteUpMorph}
 
@@ -119,6 +159,11 @@ MorphicDraw>>open    ^self new open
 
 \section{Selection and resizing}
 
-
+\section{Loading the code}
+The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/MorphicDraw
+Open the Monticello Browser. Add a new repository of type smalltalkhub.com. 
+The owner is StephanEggermont, the project is MorphicDraw. User and password are only needed
+when you want to commit changes to the repository. Open the repository and load the latest version of
+MorphicDraw.
 
 \end{document}  
