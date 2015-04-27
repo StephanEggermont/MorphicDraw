@@ -29,7 +29,7 @@ drawing connected figures.
 \section{A Morphic Application}
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=200pt]{SimpleMorphicDrawWindow.pdf}
+\includegraphics[width=200pt]{SimpleMorphicDrawWindow.png}
 \caption{A first iteration of the main window of MorphicDraw}
 \label{1stIteration}
 \end{center}
@@ -148,8 +148,21 @@ directory containing the icon png files:
 MDIcons default createIconMethodsFromDirectory: directory 
 \end{verbatim}
 This adds two methods for each png file, one with a base64 encoded
-contents and one icon form accessor.
-
+contents and one icon form accessor. Form provides asMorph,
+so the icons can be tested by DoIt
+\begin{verbatim}
+MDIcons default connectorIcon asMorph openInWorld
+\end{verbatim}
+This opens an ImageMorph with the icon in the World (Fig. \ref{iconhalos}). 
+By selecting it with shift-alt, its halos are shown. 
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=150pt]{ImageIcon.png}
+\caption{ImageMorph with icon and halos}
+\label{iconhalos}
+\end{center}
+\end{figure}
+With the cross halo the icon can be deleted. 
 \section{Shapes and PasteUpMorph}
 
 \section{Toolbar}
