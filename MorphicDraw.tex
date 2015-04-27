@@ -52,10 +52,21 @@ Object subclass: #MorphicDraw    instanceVariableNames: 'window tools dock'
 Creating a window in Morphic is simple. Open a workspace and DoIt
 \begin{verbatim}
 StandardWindow new openInWorld 
-\end{verbatim}
-This creates a window and opens it on the screen. It already has default
-behaviour for closing and resizing, and a default title. MorphicDraw
-needs to change the title and default window size.
+\end{verbatim} 
+This creates a window and opens it on the screen. 
+It already has default behaviour for closing and resizing, and a default title. 
+All graphical elements in Morphic are subclasses of Morph, and the 
+World is a container for all of them. Opening a Morph in the world
+positions it and makes it visible. An alternative to opening it directly is
+to add it to the (mouse) cursor. In Morphic this is called the hand.
+DoIt:
+\begin{verbatim}
+StandardWindow new openInHand 
+\end{verbatim} 
+The window is then positioned by clicking.
+
+The MorphicDraw application uses the first, but needs to change 
+the window title and default size.
 
 \begin{verbatim}
 MorphicDraw>>createWindow    window := StandardWindow new        setLabel: 'MorphicDraw';        extent: 400@400;        yourself.
@@ -82,6 +93,15 @@ is provided by MDIcons default cardIcon.
 The button for the other shape is similar:
 \begin{verbatim}
 MorphicDraw>>createNewRectangleButton    ^ window        newButtonFor: self        getState: nil        action: #newRectangle        arguments: nil        getEnabled: nil        labelForm: MDIcons default rectangleIcon        help: 'New Rectangle' translated
+\end{verbatim}
+
+A toolbar in Morphic consists of two parts, a ToolDockingBar and
+a Toolbar. The Toolbar is added 
+
+\begin{verbatim}
+MorphicDraw>>createToolBar    tools := window newToolbar: (Array with: self createNewRectangleButton with: self createNewCardButton).
+    dock := window newToolDockingBar.
+    dock addMorphBack: tools
 \end{verbatim}
 
 At the class side add a method to open the application
