@@ -7,7 +7,7 @@
 \usepackage{graphicx}				% Use pdf, png, jpg, or epsß with pdflatex; use eps in DVI mode
 \usepackage{fontspec}
 \usepackage{multicol}
-%\setmainfont{gill sans}
+\setmainfont{Arial}
 					
 \linespread{1.1}			% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{amssymb}
@@ -16,10 +16,6 @@
 \title{MorphicDraw}
 \author{Stephan J.C. Eggermont, Sensus}
 \begin{document}
-%\pagestyle{empty}
-\newcommand{\logo}{\fontsize{31}{31}\selectfont}
-\newcommand{\logosmall}{\fontsize{7.2}{7.2}\selectfont}
-
 \setlength{\parindent}{0pt}
 \maketitle
 \begin{quote}
@@ -43,6 +39,56 @@ with a toolbar and a drawing area. In the drawing area there are
 three graphical shapes, one of which is selected. A context menu
 for the selected shape shows options to delete it and to connect it.
 
+\subsection{An application with a window}
+Add a class that represents the application. It has instance variables for 
+the different parts. 
+
+\begin{verbatim}
+Object subclass: #MorphicDraw    instanceVariableNames: 'window tools dock'
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
+\end{verbatim}
+
+Creating a window in Morphic is simple. Open a workspace and DoIt
+\begin{verbatim}
+StandardWindow new openInWorld 
+\end{verbatim}
+This creates a window and opens it on the screen. It already has default
+behaviour for closing and resizing, and a default title. MorphicDraw
+needs to change the title and default window size.
+
+\begin{verbatim}
+MorphicDraw>>createWindow    window := StandardWindow new        setLabel: 'MorphicDraw';        extent: 400@400;        yourself.
+\end{verbatim}
+
+StandardWindow is part of PolyMorph. PolyMorph makes the 
+Window responsible for adding predefined user interface widgets
+to the application Window. For that it uses the TEasilyThemed 
+trait. It adds a lot (163 in my current image) of convenience methods.
+
+In Morphic, a toolbar in a window has buttons on it. This iteration of
+MorphicDraw uses two buttons to be able to create two different 
+graphical shapes.
+
+\begin{verbatim}
+MorphicDraw>>createNewCardButton    ^ window        newButtonFor: self        getState: nil        action: #newCard        arguments: nil        getEnabled: nil        labelForm: MDIcons default cardIcon        help: 'New Card' translated
+\end{verbatim}
+The help text is shown when hovering the mouse over the button.
+The button is always enabled, and sends the \#newCard message 
+without any arguments to self when it is pressed. It has no 
+state-dependent behaviour or shape. The icon for the button
+is provided by MDIcons default cardIcon.
+
+The button for the other shape is similar:
+\begin{verbatim}
+MorphicDraw>>createNewRectangleButton    ^ window        newButtonFor: self        getState: nil        action: #newRectangle        arguments: nil        getEnabled: nil        labelForm: MDIcons default rectangleIcon        help: 'New Rectangle' translated
+\end{verbatim}
+
+At the class side add a method to open the application
+
+\begin{verbatim}
+MorphicDraw>>open    ^self new open
+\end{verbatim}
 
 \section{Shapes and PasteUpMorph}
 
