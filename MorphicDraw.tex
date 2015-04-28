@@ -25,7 +25,6 @@ Morphic is a powerful graphics environment, used in Self, Squeak, Cuis and Pharo
 In an iterative and incremental process we'll build up an application that supports
 drawing connected figures.
 \end{quote} 
-
 \section{A Morphic Application}
 \begin{figure}[htb]
 \begin{center}
@@ -124,9 +123,11 @@ new morph of the right kind and opening it in the hand. Both MDShape is a
 subclass of BorderedMorph and MDCard a subclass of MDShape.
 
 \begin{verbatim}
-MorphicDraw>>newCard    ^MDCard new openInHand
+MorphicDraw>>newCard
+    ^MDCard new openInHand
 
-MorphicDraw>>newRectangle    ^MDShape new openInHand
+MorphicDraw>>newRectangle
+    ^MDShape new openInHand
 \end{verbatim}
 
 A toolbar in Morphic consists of two parts, a ToolDockingBar and
@@ -141,7 +142,15 @@ MorphicDraw>>createToolBar
 \end{verbatim}
 This allows the creation and opening of the window
 \begin{verbatim}
-MorphicDraw>>open     self createWindow.     self createToolBar.     window         addMorph: dock            fullFrame: ((0@0 corner: 1@0) asLayoutFrame bottomOffset: dock minExtent y);        addMorph: MDPanel new 			            fullFrame: ((0@0 corner: 1@1) asLayoutFrame topOffset: dock minExtent y).    ^window openInWorld.
+MorphicDraw>>open
+     self createWindow.
+     self createToolBar.
+     window
+         addMorph: dock
+            fullFrame: ((0@0 corner: 1@0) asLayoutFrame bottomOffset: dock minExtent y);
+        addMorph: MDPanel new 			
+            fullFrame: ((0@0 corner: 1@1) asLayoutFrame topOffset: dock minExtent y).
+    ^window openInWorld.
 \end{verbatim}
 Some morphs automatically lay out their submorphs when they are added,
 others need to add an explicit layout strategy. The toolbar adds its toolbar buttons
@@ -169,6 +178,28 @@ At the class side add a method to open the application
 MorphicDraw>>open
     ^self new open
 \end{verbatim}
+
+\section{Shapes and PasteUpMorph}
+The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
+\begin{verbatim}
+Morph new openInWorld
+\end{verbatim}
+This opens a small blue rectangle on the screen. This can be dragged around on 
+the screen. That is functionality that can be reused. World is a subclass of 
+PasteUpMorph. The default PasteUpMorph is another small rectangle, this
+time light green. 
+\begin{verbatim}
+PasteUpMorph new openInWorld
+\end{verbatim}
+After dragging a Morph onto a PasteUpMorph, it behaves as
+a canvas containing the Morph. Let's use a subclass of PasteUpMorph
+as the application canvas panel. 
+\begin{verbatim}
+PasteUpMorph subclass: #MDPanel    instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+
+
+
 
 \section{Icons\label{Icons}}
 The current icons in Pharo are bitmap icons. Athens makes it possible
@@ -231,8 +262,31 @@ By having the resource contents in a method, the normal version
 control can be used and there is no need for specific resource
 management. This works well when the resources are small and can be
 manipulated in the image, like png icons.  
-\section{Shapes and PasteUpMorph}
 
+\section{Colors}
+The responsibility for the colors used in MorphicDraw is given to the MDColors class.
+\begin{verbatim}
+Object subclass: #MDColors    instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+At the moment there is no need to dynamically change these colors, so add
+an indicator that the colors are all defined class-side.
+\begin{verbatim}
+MDColors>>seeClassSide
+\end{verbatim}
+At the class side, the colors for a Solarize color scheme are added
+\begin{verbatim}
+MDColors class>>base0    ^Color fromHexString: '839496'
+
+MDColors class>>base00    ^Color fromHexString: '657b83'
+
+MDColors class>>base01    ^Color fromHexString: '586e75'
+,,,
+MDColors class>>red    ^Color fromHexString: 'dc322f'
+
+MDColors class>>violet    ^Color fromHexString: '6c71c4'
+
+MDColors class>>yellow    ^Color fromHexString: 'b58900'
+\end{verbatim}
 \section{Toolbar}
 \section{Connecting}
 
