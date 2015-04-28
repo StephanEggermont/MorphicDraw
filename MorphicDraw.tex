@@ -242,6 +242,11 @@ MDPanel new openInWorld.
 MDShape new openInWorld.
 \end{verbatim}
 Verify that the shape can be dragged on the panel, and other morphs can not.
+To make sure that an MDShape can only be dropped on a MDPanel,
+add a method to MDShape
+\begin{verbatim}
+MDShape>>wantsToBeDroppedInto: aMorph    ^aMorph class = MDPanel
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Icons\label{Icons}}
