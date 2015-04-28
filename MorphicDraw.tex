@@ -25,6 +25,7 @@ Morphic is a powerful graphics environment, used in Self, Squeak, Cuis and Pharo
 In an iterative and incremental process we'll build up an application that supports
 drawing connected figures.
 \end{quote} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Morphic Application}
 \begin{figure}[htb]
 \begin{center}
@@ -179,6 +180,7 @@ MorphicDraw>>open
     ^self new open
 \end{verbatim}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shapes and PasteUpMorph}
 The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
 \begin{verbatim}
@@ -197,10 +199,47 @@ as the application canvas panel.
 \begin{verbatim}
 PasteUpMorph subclass: #MDPanel    instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
 \end{verbatim}
+The default color for a PasteUpMorph is less suitable for MorphicDraw.
+override it:
+\begin{verbatim}
+MDPanel>>defaultColor    "answer the default color/fill style for the receiver"    ^ MDColors base03
+\end{verbatim}
+Its default size is also too small.
+\begin{verbatim}
+MDPanel>>defaultBounds"answer the default bounds for the receiver"    ^ 0 @ 0 corner: 300 @ 200
+\end{verbatim}
 
+The method that decides what kind of Morphs a PasteUpMorph wants 
+to receive is wantsDroppedMorph: aMorph event: evt. In WorldMorph this
+always returns true, in PasteUpMorph only Morphs that are visible and
+dropEnabled. MorphicDraw only wants to have to deal with its own 
+Morphs. 
+\begin{verbatim}
+MDPanel>>wantsDroppedMorph: aMorph event: evt    (aMorph isMorphicDraw) ifFalse: [ ^false ].    ^super wantsDroppedMorph: aMorph event: evt
+\end{verbatim}
+This works by adding a method to a special protocol in Morph.
+In Morph add the protocol '*MorphicDraw-Model'.
+In that protocol add a method
+\begin{verbatim}
+Morph>>isMorphicDraw    ^false
+\end{verbatim}
+Now create a subclass of BorderedMorph to use as the basic shape
+\begin{verbatim}
+BorderedMorph subclass: #MDShape    instanceVariableNames: 'selected highlighted connectors handles'    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+and override isMorphicDraw
+\begin{verbatim}
+MDShape>>isMorphicDraw    ^true
+\end{verbatim}
+Now test that the MDPanel only accepts MDShapes. 
+DoIt
+\begin{verbatim}
+MDPanel new openInWorld.
+MDShape new openInWorld.
+\end{verbatim}
+Verify that the shape can be dragged on the panel, and other morphs can not.
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Icons\label{Icons}}
 The current icons in Pharo are bitmap icons. Athens makes it possible
 to replace them by SVG, vector based icons. PolyMorph adds the 
@@ -263,6 +302,7 @@ control can be used and there is no need for specific resource
 management. This works well when the resources are small and can be
 manipulated in the image, like png icons.  
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Colors}
 The responsibility for the colors used in MorphicDraw is given to the MDColors class.
 \begin{verbatim}
@@ -287,13 +327,15 @@ MDColors class>>violet    ^Color fromHexString: '6c71c4'
 
 MDColors class>>yellow    ^Color fromHexString: 'b58900'
 \end{verbatim}
-\section{Toolbar}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Connecting}
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Selection and resizing}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
 The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/MorphicDraw
 Open the Monticello Browser. Add a new repository of type smalltalkhub.com. 
