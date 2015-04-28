@@ -155,7 +155,7 @@ MorphicDraw>>open
 \end{verbatim}
 Some morphs automatically lay out their submorphs when they are added,
 others need to add an explicit layout strategy. The toolbar adds its toolbar buttons
-from left to right without a space.  
+from left to right without a gap between them.  
 The toolbar dock by default takes up the top edge of the morph it is added to. 
 For a window that is the area with the drag bar, title and window icons. 
 A LayoutFrame that should fit the whole contents area of the window is
@@ -218,12 +218,16 @@ Morphs.
 MDPanel>>wantsDroppedMorph: aMorph event: evt    (aMorph isMorphicDraw) ifFalse: [ ^false ].    ^super wantsDroppedMorph: aMorph event: evt
 \end{verbatim}
 This works by adding a method to a special protocol in Morph.
+This is called creating an extension method.
 In Morph add the protocol '*MorphicDraw-Model'.
 In that protocol add a method
 \begin{verbatim}
 Morph>>isMorphicDraw    ^false
 \end{verbatim}
-Now create a subclass of BorderedMorph to use as the basic shape
+This method belongs to the MorphicDraw package, not to 
+that of Morph, Morphic-Core.
+A standard Morph has no border, this is added by BorderedMorph.
+Create a subclass of BorderedMorph to use as the basic shape.
 \begin{verbatim}
 BorderedMorph subclass: #MDShape    instanceVariableNames: 'selected highlighted connectors handles'    classVariableNames: ''    category: 'MorphicDraw-Model'
 \end{verbatim}
