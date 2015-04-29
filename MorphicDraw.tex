@@ -372,6 +372,47 @@ selection state. Highlighting color dominates this color.
 \begin{verbatim}
 MDShape>>updateSelection    selected ifTrue: [         self color: self selectedColor.        self showHandles]    ifFalse: [         self removeHandles.        self color: self unselectedColor].    highlighted ifTrue: [         self color: self highlightColor  ]
 \end{verbatim}
+In showHandles, the morphs for the handles
+are created the first time they are needed, then they are 
+added to the shape and then (re)positioned on the respective
+corners of the shape.
+\begin{verbatim} 
+MDShape>>showHandles    handles ifEmpty: [ self addHandles ].    handles do: [ :handle |        self addMorph: handle ].    self positionCorners
+\end{verbatim}
+Adding the handles consists of creating one with the
+appropriate corner name.
+\begin{verbatim}
+MDShape>>addHandles    #(topLeft bottomRight bottomLeft topRight) do: [ :aCorner |         handles add: (MDCornerHandle on: self at: aCorner) ].\end{verbatim}
+Positioning the corners is delegated to the handles
+\begin{verbatim}
+MDShape>>positionCorners    handles do: [ :corner | corner rePosition ]
+\end{verbatim}
+\subsection{Corner handles}
+A corner shape knows which corner of which subject it is for
+\begin{verbatim}
+BorderedMorph subclass: #MDCornerHandle	instanceVariableNames: 'subject corner'	classVariableNames: ''	category: 'MorphicDraw-Model'
+\end{verbatim}
+The shape creates them
+\begin{verbatim}
+MDCornerHandle class>>on: aSubject at: aCorner    "see instance side corners for possible values"    ^self new        subject: aSubject;        corner: aCorner;        yourself
+\end{verbatim}
+Because a morph shape responds to the corner name messages with
+the position of the respective corner, \#reposition gets the location of
+that corner from the subject
+\begin{verbatim}
+MDCornerHandle>>rePosition    self positionMeAt: (subject perform: corner)
+\end{verbatim}
+To position the corner handle, all that is needed is the opposite
+corner
+\begin{verbatim}
+MDCornerHandle>>oppositeCorners    ^Dictionary newFromPairs:# (topLeft bottomRight:     leftCenter rightCenter:     bottomLeft topRight:     bottomCenter topCenter:    bottomRight topLeft:     rightCenter leftCenter:    topRight bottomLeft:    topCenter bottomCenter:)
+\end{verbatim} 
+With that, the handle gets positioned exactly at the outside 
+of the shape.
+\begin{verbatim}
+MDCornerHandle>>positionMeAt: aPosition    self perform: (self oppositeCorners at: corner) with: aPosition
+\end{verbatim}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Connecting}
 
