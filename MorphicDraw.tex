@@ -412,6 +412,20 @@ of the shape.
 \begin{verbatim}
 MDCornerHandle>>positionMeAt: aPosition    self perform: (self oppositeCorners at: corner) with: aPosition
 \end{verbatim}
+To make sure that the corner handle can be used to scale its shape,
+it needs to handle mouse move after a mouse down
+\begin{verbatim}
+MDCornerHandle>>handlesMouseDown: evt    ^true
+
+MDCornerHandle>>handlesMouseOver: evt    ^true
+\end{verbatim}
+Once the mouse is moved, the handle needs to be moved to where
+the mouse is.
+\begin{verbatim}
+MDCornerHandle>>mouseMove: evt    self reframedTo: evt position
+
+MDCornerHandle>>reframedTo: aPoint	    subject bounds: (subject bounds withSideOrCorner: corner setToPoint: aPoint).    subject moved.    subject positionCorners
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Connecting}
