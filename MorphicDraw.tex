@@ -430,6 +430,25 @@ In \#moved the connectors can be updated.
 MDShape>>moved	connectors do: [ :connector | connector moved ]
 \end{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Context menu}
+The shape needs to react to mouse events. When the mouse button is pressed 
+over the shape, it can be either part of a click or of the beginning of a drag.
+The hand supports making that distinction. If the mouse is not moved too far
+before the mouse button is released, it will send \#click: to the shape
+\begin{verbatim}
+MDShape>>mouseDown: evt    evt ifNotNil: [          evt hand waitForClicksOrDrag: self event: evt]
+\end{verbatim}
+The context menu is shown when the right button has been clicked.
+No further propagation of the event is wanted.
+\begin{verbatim}
+MDShape>>click: evt    "Default behavior: Show a context menu if right mouse button was clicked."	    evt yellowButtonPressed ifTrue: [        self openContextMenuForHand: evt hand.        evt wasHandled: true.]
+\end{verbatim}
+The context menu is a standard menu morph. It is filled with two
+actions in menu items with icons: delete and connect. Both sent a message to the shape . 
+By sending it \#popUpInWorld it is shown at the position of the hand. 
+\begin{verbatim}
+openContextMenuForHand: aHand    | menu |    menu := MenuMorph new defaultTarget: self.    menu add: 'delete' selector: #delete;        add: 'connect' selector: #connect.    menu items first icon: Smalltalk ui theme icons deleteIcon .    menu items second icon: MDIcons default connectorIcon .    menu popUpInWorld
+\end{verbatim}
 \section{Connecting}
 
 
