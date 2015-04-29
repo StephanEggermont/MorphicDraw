@@ -137,7 +137,8 @@ sticks to one edge of the Morph that it is added to.
 
 \begin{verbatim}
 MorphicDraw>>createToolBar
-    tools := window newToolbar: (Array with: self createNewRectangleButton with: self createNewCardButton).
+    tools := window newToolbar: 
+        (Array with: self createNewRectangleButton with: self createNewCardButton).
     dock := window newToolDockingBar.
     dock addMorph: tools
 \end{verbatim}
@@ -343,7 +344,7 @@ Adding shapes to the panel and moving them around on it now works.
 To manipulate shapes, Morphic by default uses halos. In this application
 an approach more similar to drawing programs like Freehand or Illustrator
 is preferred. When a shape is selected, show small manipulation squares
-at the corners (Fig. \ref{selectedShape}).
+(handles) at the corners (Fig. \ref{selectedShape}) to be able to resize them.
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=150pt]{SelectedShape.png}
@@ -351,7 +352,26 @@ at the corners (Fig. \ref{selectedShape}).
 \label{selectedShape}
 \end{center}
 \end{figure}
-
+In the initialize of the MDShape the color and border color
+are set.
+\begin{verbatim}
+MDShape>>initialize    super initialize.    self color: self defaultColor.    self borderColor: self defaultBackgroundColor.    selected := false.    highlighted := false.    connectors := OrderedCollection new.    handles := OrderedCollection new.    self on: #mouseUp send: #changeSelected to: self.    self on: #mouseMove send: #doDrag:with: to: self
+\end{verbatim}
+A new MDShape is not selected and not highlighted.
+It has no connectors to other shapes and no handles.
+The selection will be changed on \#mouseUp and 
+the handles might have to be moved on \#mouseMove.
+On \#mouseUp, the selection is changed and the shape
+updates itself. 
+\begin{verbatim}
+MDShape>>changeSelected    selected := selected not.
+    self updateSelection. 
+\end{verbatim}
+The color is changed to the color representing the 
+selection state. Highlighting color dominates this color.
+\begin{verbatim}
+MDShape>>updateSelection    selected ifTrue: [         self color: self selectedColor.        self showHandles]    ifFalse: [         self removeHandles.        self color: self unselectedColor].    highlighted ifTrue: [         self color: self highlightColor  ]
+\end{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Connecting}
 
