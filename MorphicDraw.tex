@@ -450,9 +450,30 @@ By sending it \#popUpInWorld it is shown at the position of the hand.
 openContextMenuForHand: aHand    | menu |    menu := MenuMorph new defaultTarget: self.    menu add: 'delete' selector: #delete;        add: 'connect' selector: #connect.    menu items first icon: Smalltalk ui theme icons deleteIcon .    menu items second icon: MDIcons default connectorIcon .    menu popUpInWorld
 \end{verbatim}
 \section{Connecting}
+A PolygonMorph provides a good base for a connector.
+Just add the shapes it connects to.
+\begin{verbatim}
+PolygonMorph subclass: #MDConnector    instanceVariableNames: 'from to'    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+It need stop be configured as a line-based polygon, not a
+closed figure.
+\begin{verbatim}
+MDConnector>>initialize    super initialize.    closed := false.
+\end{verbatim}
+As the shapes keep track of their connectors, they need
+to know when they are (dis)connected.
+\begin{verbatim}
+MDConnector>>from: anObject    from ifNotNil: [ from connectors delete: self ].
+    from := anObject.    from connectors add: self.    self moved.
+\end{verbatim}
+They connect from center to center of the shapes they connect to
+and need to recalculate their shape when moved. Setting the 
+vertices to an array with two points just creates a straight line.
+\begin{verbatim}
+MDConnector>>moved    (from isNil | to isNil )ifFalse: [    self vertices: (Array with: from center with: to center)]
 
-
-
+MDConnector>>vertices: aCollection	vertices := aCollection.	self computeBounds
+\end{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
 The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/MorphicDraw
