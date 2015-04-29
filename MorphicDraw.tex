@@ -338,11 +338,24 @@ MDColors class>>yellow    ^Color fromHexString: 'b58900'
 \end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Selection and resizing}
+Adding shapes to the panel and moving them around on it now works.
+To manipulate shapes, Morphic by default uses halos. In this application
+an approach more similar to drawing programs like Freehand or Illustrator
+is preferred. When a shape is selected, show small manipulation squares
+at the corners (Fig. \ref{selectedShape}).
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=150pt]{SelectedShape.png}
+\caption{A selected shape}
+\label{selectedShape}
+\end{center}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Connecting}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Selection and resizing}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
