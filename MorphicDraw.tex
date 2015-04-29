@@ -434,9 +434,14 @@ MDShape>>moved	connectors do: [ :connector | connector moved ]
 The shape needs to react to mouse events. When the mouse button is pressed 
 over the shape, it can be either part of a click or of the beginning of a drag.
 The hand supports making that distinction. If the mouse is not moved too far
-before the mouse button is released, it will send \#click: to the shape
+before the mouse button is released, it will send \#click: to the shape, otherwise
+\#drag:with:.
 \begin{verbatim}
 MDShape>>mouseDown: evt    evt ifNotNil: [          evt hand waitForClicksOrDrag: self event: evt]
+\end{verbatim}
+On a drag, the shape should be moved
+\begin{verbatim}
+MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    aMouseMoveEvent hand startDrag: aMouseMoveEvent with: aMDShape.
 \end{verbatim}
 The context menu is shown when the right button has been clicked.
 No further propagation of the event is wanted.
@@ -474,6 +479,49 @@ MDConnector>>moved    (from isNil | to isNil )ifFalse: [    self vertices: (Ar
 
 MDConnector>>vertices: aCollection	vertices := aCollection.	self computeBounds
 \end{verbatim}
+This connector works fine when its two end-points are connected,
+but has no support for creating a connection from one shape to 
+another. For that to work the hand must be tracked from the
+moment the connect action is started. A separate connector
+type is used that deals with that.
+\begin{verbatim}
+MDShape>>connect    |connector|    connector := MDTempConnector from: self to: ActiveHand.    connector openInWorld.
+\end{verbatim}
+This temporary connector should be able to highlight shapes it is 
+over, to show where it can connect to.
+\begin{verbatim}
+MDConnector subclass: #MDTempConnector    instanceVariableNames: 'over'    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+It is connected to the active hand, and starts listening to
+movements of the hand
+\begin{verbatim}
+MDTempConnector>>to: aHand    to := aHand.    ActiveHand addEventListener: self.\end{verbatim}
+It is only interested in mouse events. If it is moved it tries to find
+a shape it is over and highlights it, and tries to make a connection 
+on mouse up.
+\begin{verbatim}
+MDTempConnector>>handleListenEvent: anEvent    anEvent isMouse ifFalse: [ ^self].    anEvent isMouseUp ifTrue: [ self stopListening: anEvent].     anEvent isMouseMove ifTrue: [         self moved.        self highlightShapeAt: anEvent ]
+\end{verbatim}
+On mouse up the event listener needs to stop listening, 
+a potential highlighted shape is unhighlighted and the
+temporary connector is removed. If the mouse up was over
+a shape, it is replaced by a real connector.
+\begin{verbatim}
+MDTempConnector>>stopListening: anEvent    ActiveHand removeEventListener: self.    (self shapeAtPosition: anEvent) ifNotNil: [ :shape |        from owner addMorphBack: (MDConnector from: from to: shape ) ].    over ifNotNil: [ over unhighlight ].    self delete
+\end{verbatim}	
+Morphic already support finding the morphs at a certain 
+position. Select the shapes that can be connected to needs
+an extra test that is returns false on Morph and true on
+MDShape and subclasses.
+\begin{verbatim}
+MDTempConnector>>shapeAtPosition: anEvent    "ask the panel instead of the world?     push up?"    ^(World morphsAt: anEvent position) detect: [:aMorph |        aMorph isMorphicDrawShape ] ifNone: [nil].
+\end{verbatim}	
+Highlight the right shape. The mouse can be moved 
+both from shape to shape without moving over empty space.
+\begin{verbatim}
+MDTempConnector>>highlightShapeAt: anEvent    |shape|    shape := self shapeAtPosition: anEvent.    over ifNil: [         shape ifNotNil: [             over := shape.            over highlight ] ]    ifNotNil: [         shape = over ifFalse: [             over unhighlight.            over := shape.            over ifNotNil: [              over highlight ] ] ]
+\end{verbatim}	
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
 The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/MorphicDraw
