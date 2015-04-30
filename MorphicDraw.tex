@@ -22,7 +22,7 @@
 \em
 MorphicDraw is a drawing application demonstrating some of the power of Morphic.
 Morphic is a powerful graphics environment, used in Self, Squeak, Cuis and Pharo.
-In an iterative and incremental process we'll build up an application that supports
+In an iterative and incremental process, build up an application that supports
 drawing connected figures.
 \end{quote} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -211,7 +211,7 @@ MDPanel>>defaultBounds"answer the default bounds for the receiver"    ^ 0 @ 0 
 \end{verbatim}
 
 The method that decides what kind of Morphs a PasteUpMorph wants 
-to receive is wantsDroppedMorph: aMorph event: evt. In WorldMorph this
+to receive is \#wantsDroppedMorph: aMorph event: evt. In WorldMorph this
 always returns true, in PasteUpMorph only Morphs that are visible and
 dropEnabled. MorphicDraw only wants to have to deal with its own 
 Morphs. 
