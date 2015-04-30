@@ -67,13 +67,12 @@ StandardWindow new openInHand
 The window is then positioned by clicking.
 
 The MorphicDraw application uses the first, but needs to change 
-the window title and default size.
+the window title. It will grow its size to fir the contents.
 
 \begin{verbatim}
 MorphicDraw>>createWindow
     window := StandardWindow new
         setLabel: 'MorphicDraw';
-        extent: 400@400;
         yourself.
 \end{verbatim}
 
