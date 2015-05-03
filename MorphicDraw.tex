@@ -197,16 +197,23 @@ After dragging a Morph onto a PasteUpMorph, it behaves as
 a canvas containing the Morph. Let's use a subclass of PasteUpMorph
 as the application canvas panel. 
 \begin{verbatim}
-PasteUpMorph subclass: #MDPanel    instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+PasteUpMorph subclass: #MDPanel
+    instanceVariableNames: ''
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 The default color for a PasteUpMorph is less suitable for MorphicDraw.
 override it:
 \begin{verbatim}
-MDPanel>>defaultColor    "answer the default color/fill style for the receiver"    ^ MDColors base03
+MDPanel>>defaultColor
+    "answer the default color/fill style for the receiver"
+    ^ MDColors base03
 \end{verbatim}
 Its default size is also too small.
 \begin{verbatim}
-MDPanel>>defaultBounds"answer the default bounds for the receiver"    ^ 0 @ 0 corner: 300 @ 200
+MDPanel>>defaultBounds
+"answer the default bounds for the receiver"
+    ^ 0 @ 0 corner: 300 @ 200
 \end{verbatim}
 
 The method that decides what kind of Morphs a PasteUpMorph wants 
@@ -215,25 +222,32 @@ always returns true, in PasteUpMorph only Morphs that are visible and
 dropEnabled. MorphicDraw only wants to have to deal with its own 
 Morphs. 
 \begin{verbatim}
-MDPanel>>wantsDroppedMorph: aMorph event: evt    (aMorph isMorphicDraw) ifFalse: [ ^false ].    ^super wantsDroppedMorph: aMorph event: evt
+MDPanel>>wantsDroppedMorph: aMorph event: evt
+    (aMorph isMorphicDraw) ifFalse: [ ^false ].
+    ^super wantsDroppedMorph: aMorph event: evt
 \end{verbatim}
 This works by adding a method to a special protocol in Morph.
 This is called creating an extension method.
 In Morph add the protocol '*MorphicDraw-Model'.
 In that protocol add a method
 \begin{verbatim}
-Morph>>isMorphicDraw    ^false
+Morph>>isMorphicDraw
+    ^false
 \end{verbatim}
 This method belongs to the MorphicDraw package, not to 
 that of Morph, Morphic-Core.
 A standard Morph has no border, this is added by BorderedMorph.
 Create a subclass of BorderedMorph to use as the basic shape.
 \begin{verbatim}
-BorderedMorph subclass: #MDShape    instanceVariableNames: 'selected highlighted connectors handles'    classVariableNames: ''    category: 'MorphicDraw-Model'
+BorderedMorph subclass: #MDShape
+    instanceVariableNames: 'selected highlighted connectors handles'
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 and override isMorphicDraw
 \begin{verbatim}
-MDShape>>isMorphicDraw    ^true
+MDShape>>isMorphicDraw
+    ^true
 \end{verbatim}
 Now test that the MDPanel only accepts MDShapes. 
 DoIt
@@ -245,7 +259,8 @@ Verify that the shape can be dragged on the panel, and other morphs can not.
 To make sure that an MDShape can only be dropped on a MDPanel,
 add a method to MDShape
 \begin{verbatim}
-MDShape>>wantsToBeDroppedInto: aMorph    ^aMorph class = MDPanel
+MDShape>>wantsToBeDroppedInto: aMorph
+    ^aMorph class = MDPanel
 \end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -314,8 +329,15 @@ manipulated in the image, like png icons.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Colors}
 The responsibility for the colors used in MorphicDraw is given to the MDColors class.
+This provides the actual colors. In a larger application, one would want to
+separate these from their semantic use, so one would be able to use
+ \#highlightColor or \#selectionColor, and make them dependent on the global
+ setting of a dark or light theme.
 \begin{verbatim}
-Object subclass: #MDColors    instanceVariableNames: ''    classVariableNames: ''    category: 'MorphicDraw-Model'
+Object subclass: #MDColors
+    instanceVariableNames: ''
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 At the moment there is no need to dynamically change these colors, so add
 an indicator that the colors are all defined class-side.
@@ -324,17 +346,23 @@ MDColors>>seeClassSide
 \end{verbatim}
 At the class side, the colors for a Solarize color scheme are added
 \begin{verbatim}
-MDColors class>>base0    ^Color fromHexString: '839496'
+MDColors class>>base0
+    ^Color fromHexString: '839496'
 
-MDColors class>>base00    ^Color fromHexString: '657b83'
+MDColors class>>base00
+    ^Color fromHexString: '657b83'
 
-MDColors class>>base01    ^Color fromHexString: '586e75'
+MDColors class>>base01
+    ^Color fromHexString: '586e75'
 ,,,
-MDColors class>>red    ^Color fromHexString: 'dc322f'
+MDColors class>>red
+    ^Color fromHexString: 'dc322f'
 
-MDColors class>>violet    ^Color fromHexString: '6c71c4'
+MDColors class>>violet
+    ^Color fromHexString: '6c71c4'
 
-MDColors class>>yellow    ^Color fromHexString: 'b58900'
+MDColors class>>yellow
+    ^Color fromHexString: 'b58900'
 \end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -354,7 +382,16 @@ is preferred. When a shape is selected, show small manipulation squares
 In the initialize of the MDShape the color and border color
 are set.
 \begin{verbatim}
-MDShape>>initialize    super initialize.    self color: self defaultColor.    self borderColor: self defaultBackgroundColor.    selected := false.    highlighted := false.    connectors := OrderedCollection new.    handles := OrderedCollection new.    self on: #mouseUp send: #changeSelected to: self.    self on: #mouseMove send: #doDrag:with: to: self
+MDShape>>initialize
+    super initialize.
+    self color: self defaultColor.
+    self borderColor: self defaultBackgroundColor.
+    selected := false.
+    highlighted := false.
+    connectors := OrderedCollection new.
+    handles := OrderedCollection new.
+    self on: #mouseUp send: #changeSelected to: self.
+    self on: #mouseMove send: #doDrag:with: to: self
 \end{verbatim}
 A new MDShape is not selected and not highlighted.
 It has no connectors to other shapes and no handles.
@@ -363,70 +400,111 @@ the handles might have to be moved on \#mouseMove.
 On \#mouseUp, the selection is changed and the shape
 updates itself. 
 \begin{verbatim}
-MDShape>>changeSelected    selected := selected not.
+MDShape>>changeSelected
+    selected := selected not.
     self updateSelection. 
 \end{verbatim}
 The color is changed to the color representing the 
 selection state. Highlighting color dominates this color.
 \begin{verbatim}
-MDShape>>updateSelection    selected ifTrue: [         self color: self selectedColor.        self showHandles]    ifFalse: [         self removeHandles.        self color: self unselectedColor].    highlighted ifTrue: [         self color: self highlightColor  ]
+MDShape>>updateSelection
+    selected ifTrue: [ 
+        self color: self selectedColor.
+        self showHandles]
+    ifFalse: [ 
+        self removeHandles.
+        self color: self unselectedColor].
+    highlighted ifTrue: [ 
+        self color: self highlightColor  ]
 \end{verbatim}
 In showHandles, the morphs for the handles
 are created the first time they are needed, then they are 
 added to the shape and then (re)positioned on the respective
 corners of the shape.
 \begin{verbatim} 
-MDShape>>showHandles    handles ifEmpty: [ self addHandles ].    handles do: [ :handle |        self addMorph: handle ].    self positionCorners
+MDShape>>showHandles
+    handles ifEmpty: [ self addHandles ].
+    handles do: [ :handle |
+        self addMorph: handle ].
+    self positionCorners
 \end{verbatim}
 Adding the handles consists of creating one with the
 appropriate corner name.
 \begin{verbatim}
-MDShape>>addHandles    #(topLeft bottomRight bottomLeft topRight) do: [ :aCorner |         handles add: (MDCornerHandle on: self at: aCorner) ].\end{verbatim}
+MDShape>>addHandles
+    #(topLeft bottomRight bottomLeft topRight) do: [ :aCorner | 
+        handles add: (MDCornerHandle on: self at: aCorner) ].
+\end{verbatim}
 Positioning the corners is delegated to the handles
 \begin{verbatim}
-MDShape>>positionCorners    handles do: [ :corner | corner rePosition ]
+MDShape>>positionCorners
+    handles do: [ :corner | corner rePosition ]
 \end{verbatim}
 \subsection{Corner handles}
 A corner shape knows which corner of which subject it is for
 \begin{verbatim}
-BorderedMorph subclass: #MDCornerHandle	instanceVariableNames: 'subject corner'	classVariableNames: ''	category: 'MorphicDraw-Model'
+BorderedMorph subclass: #MDCornerHandle
+	instanceVariableNames: 'subject corner'
+	classVariableNames: ''
+	category: 'MorphicDraw-Model'
 \end{verbatim}
 The shape creates them
 \begin{verbatim}
-MDCornerHandle class>>on: aSubject at: aCorner    "see instance side corners for possible values"    ^self new        subject: aSubject;        corner: aCorner;        yourself
+MDCornerHandle class>>on: aSubject at: aCorner
+    "see instance side corners for possible values"
+    ^self new
+        subject: aSubject;
+        corner: aCorner;
+        yourself
 \end{verbatim}
 Because a morph shape responds to the corner name messages with
 the position of the respective corner, \#reposition gets the location of
 that corner from the subject
 \begin{verbatim}
-MDCornerHandle>>rePosition    self positionMeAt: (subject perform: corner)
+MDCornerHandle>>rePosition
+    self positionMeAt: (subject perform: corner)
 \end{verbatim}
 To position the corner handle, all that is needed is the opposite
 corner
 \begin{verbatim}
-MDCornerHandle>>oppositeCorners    ^Dictionary newFromPairs:# (topLeft bottomRight:     leftCenter rightCenter:     bottomLeft topRight:     bottomCenter topCenter:    bottomRight topLeft:     rightCenter leftCenter:    topRight bottomLeft:    topCenter bottomCenter:)
+MDCornerHandle>>oppositeCorners
+    ^Dictionary newFromPairs:# (topLeft bottomRight: 
+    leftCenter rightCenter: 
+    bottomLeft topRight: 
+    bottomCenter topCenter:
+    bottomRight topLeft: 
+    rightCenter leftCenter:
+    topRight bottomLeft:
+    topCenter bottomCenter:)
 \end{verbatim} 
 With that, the handle gets positioned exactly at the outside 
 of the shape.
 \begin{verbatim}
-MDCornerHandle>>positionMeAt: aPosition    self perform: (self oppositeCorners at: corner) with: aPosition
+MDCornerHandle>>positionMeAt: aPosition
+    self perform: (self oppositeCorners at: corner) with: aPosition
 \end{verbatim}
 To make sure that the corner handle can be used to scale its shape,
 it needs to handle mouse events. Morphs only start receiving mouse
 events if they declare their interest in them.
 \begin{verbatim}
-MDCornerHandle>>handlesMouseDown: evt    ^true
+MDCornerHandle>>handlesMouseDown: evt
+    ^true
 \end{verbatim}
 Once the mouse is moved, the subject needs to be resized to where
 the mouse is and it needs to update the positions of the other corners.  
 \begin{verbatim}
-MDCornerHandle>>mouseMove: evt    self reframedTo: evt position
+MDCornerHandle>>mouseMove: evt
+    self reframedTo: evt position
 
-MDCornerHandle>>reframedTo: aPoint	    subject bounds: (subject bounds withSideOrCorner: corner setToPoint: aPoint).    subject moved.    subject positionCorners
+MDCornerHandle>>reframedTo: aPoint	
+    subject bounds: (subject bounds withSideOrCorner: corner setToPoint: aPoint).
+    subject moved.
+    subject positionCorners
 \end{verbatim}
 In \#moved the connectors can be updated.
 \begin{verbatim}
-MDShape>>moved	connectors do: [ :connector | connector moved ]
+MDShape>>moved
+	connectors do: [ :connector | connector moved ]
 \end{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Context menu}
@@ -436,47 +514,77 @@ The hand supports making that distinction. If the mouse is not moved too far
 before the mouse button is released, it will send \#click: to the shape, otherwise
 \#drag:with:.
 \begin{verbatim}
-MDShape>>mouseDown: evt    evt ifNotNil: [          evt hand waitForClicksOrDrag: self event: evt]
+MDShape>>mouseDown: evt
+    evt ifNotNil: [  
+        evt hand waitForClicksOrDrag: self event: evt]
 \end{verbatim}
 On a drag, the shape should be moved
 \begin{verbatim}
-MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    aMouseMoveEvent hand startDrag: aMouseMoveEvent with: aMDShape.
+MDShape>>doDrag: aMouseMoveEvent with: aMDShape 
+    ActiveHand addEventListener: self.
+    aMouseMoveEvent hand startDrag: aMouseMoveEvent with: aMDShape.
 \end{verbatim}
 The context menu is shown when the right button has been clicked.
 No further propagation of the event is wanted.
 \begin{verbatim}
-MDShape>>click: evt    "Default behavior: Show a context menu if right mouse button was clicked."	    evt yellowButtonPressed ifTrue: [        self openContextMenuForHand: evt hand.        evt wasHandled: true.]
+MDShape>>click: evt
+    "Default behavior: Show a context menu if right mouse button was clicked."
+	
+    evt yellowButtonPressed ifTrue: [
+        self openContextMenuForHand: evt hand.
+        evt wasHandled: true.]
 \end{verbatim}
 The context menu is a standard menu morph. It is filled with two
 actions in menu items with icons: delete and connect. Both sent a message to the shape . 
 By sending it \#popUpInWorld it is shown at the position of the hand. 
 \begin{verbatim}
-openContextMenuForHand: aHand    | menu |    menu := MenuMorph new defaultTarget: self.    menu add: 'delete' selector: #delete;        add: 'connect' selector: #connect.    menu items first icon: Smalltalk ui theme icons deleteIcon .    menu items second icon: MDIcons default connectorIcon .    menu popUpInWorld
+openContextMenuForHand: aHand
+    | menu |
+    menu := MenuMorph new defaultTarget: self.
+    menu add: 'delete' selector: #delete;
+        add: 'connect' selector: #connect.
+
+    menu items first icon: Smalltalk ui theme icons deleteIcon .
+    menu items second icon: MDIcons default connectorIcon .
+
+    menu popUpInWorld
 \end{verbatim}
 \section{Connecting}
 A PolygonMorph provides a good base for a connector.
 Just add the shapes it connects to.
 \begin{verbatim}
-PolygonMorph subclass: #MDConnector    instanceVariableNames: 'from to'    classVariableNames: ''    category: 'MorphicDraw-Model'
+PolygonMorph subclass: #MDConnector
+    instanceVariableNames: 'from to'
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 It need stop be configured as a line-based polygon, not a
 closed figure.
 \begin{verbatim}
-MDConnector>>initialize    super initialize.    closed := false.
+MDConnector>>initialize
+    super initialize.
+    closed := false.
 \end{verbatim}
 As the shapes keep track of their connectors, they need
 to know when they are (dis)connected.
 \begin{verbatim}
-MDConnector>>from: anObject    from ifNotNil: [ from connectors delete: self ].
-    from := anObject.    from connectors add: self.    self moved.
+MDConnector>>from: anObject
+    from ifNotNil: [ from connectors delete: self ].
+    from := anObject.
+    from connectors add: self.
+    self moved.
 \end{verbatim}
 They connect from center to center of the shapes they connect to
 and need to recalculate their shape when moved. Setting the 
 vertices to an array with two points just creates a straight line.
 \begin{verbatim}
-MDConnector>>moved    (from isNil | to isNil )ifFalse: [    self vertices: (Array with: from center with: to center)]
+MDConnector>>moved
+    (from isNil | to isNil )ifFalse: [
+    self vertices: (Array with: from center with: to center)]
 
-MDConnector>>vertices: aCollection	vertices := aCollection.	self computeBounds
+MDConnector>>vertices: aCollection
+	vertices := aCollection.
+	self computeBounds
 \end{verbatim}
 This connector works fine when its two end-points are connected,
 but has no support for creating a connection from one shape to 
@@ -484,41 +592,76 @@ another. For that to work the hand must be tracked from the
 moment the connect action is started. A separate connector
 type is used that deals with that.
 \begin{verbatim}
-MDShape>>connect    |connector|    connector := MDTempConnector from: self to: ActiveHand.    connector openInWorld.
+MDShape>>connect
+    |connector|
+    connector := MDTempConnector from: self to: ActiveHand.
+    connector openInWorld.
 \end{verbatim}
 This temporary connector should be able to highlight shapes it is 
 over, to show where it can connect to.
 \begin{verbatim}
-MDConnector subclass: #MDTempConnector    instanceVariableNames: 'over'    classVariableNames: ''    category: 'MorphicDraw-Model'
+MDConnector subclass: #MDTempConnector
+    instanceVariableNames: 'over'
+    classVariableNames: ''
+    category: 'MorphicDraw-Model'
 \end{verbatim}
 It is connected to the active hand, and starts listening to
 movements of the hand
 \begin{verbatim}
-MDTempConnector>>to: aHand    to := aHand.    ActiveHand addEventListener: self.\end{verbatim}
+MDTempConnector>>to: aHand
+    to := aHand.
+    ActiveHand addEventListener: self.
+\end{verbatim}
 It is only interested in mouse events. If it is moved it tries to find
 a shape it is over and highlights it, and tries to make a connection 
 on mouse up.
 \begin{verbatim}
-MDTempConnector>>handleListenEvent: anEvent    anEvent isMouse ifFalse: [ ^self].    anEvent isMouseUp ifTrue: [ self stopListening: anEvent].     anEvent isMouseMove ifTrue: [         self moved.        self highlightShapeAt: anEvent ]
+MDTempConnector>>handleListenEvent: anEvent
+    anEvent isMouse ifFalse: [ ^self].
+    anEvent isMouseUp ifTrue: [ self stopListening: anEvent]. 
+    anEvent isMouseMove ifTrue: [ 
+        self moved.
+        self highlightShapeAt: anEvent ]
 \end{verbatim}
 On mouse up the event listener needs to stop listening, 
-a potential highlighted shape is unhighlighted and the
+a highlighted shape is unhighlighted and the
 temporary connector is removed. If the mouse up was over
 a shape, it is replaced by a real connector.
 \begin{verbatim}
-MDTempConnector>>stopListening: anEvent    ActiveHand removeEventListener: self.    (self shapeAtPosition: anEvent) ifNotNil: [ :shape |        from owner addMorphBack: (MDConnector from: from to: shape ) ].    over ifNotNil: [ over unhighlight ].    self delete
+MDTempConnector>>stopListening: anEvent
+    ActiveHand removeEventListener: self.
+    (self shapeAtPosition: anEvent) ifNotNil: [ :shape |
+        from owner addMorphBack: (MDConnector from: from to: shape ) ].
+    over ifNotNil: [ over unhighlight ].
+    self delete
 \end{verbatim}	
 Morphic already support finding the morphs at a certain 
 position. Select the shapes that can be connected to needs
 an extra test that is returns false on Morph and true on
 MDShape and subclasses.
 \begin{verbatim}
-MDTempConnector>>shapeAtPosition: anEvent    "ask the panel instead of the world?     push up?"    ^(World morphsAt: anEvent position) detect: [:aMorph |        aMorph isMorphicDrawShape ] ifNone: [nil].
+MDTempConnector>>shapeAtPosition: anEvent
+    "ask the panel instead of the world? 
+    push up?"
+    ^(World morphsAt: anEvent position) detect: [:aMorph |
+        aMorph isMorphicDrawShape ] ifNone: [nil].
 \end{verbatim}	
 Highlight the right shape. The mouse can be moved 
 both from shape to shape without moving over empty space.
 \begin{verbatim}
-MDTempConnector>>highlightShapeAt: anEvent    |shape|    shape := self shapeAtPosition: anEvent.    over ifNil: [         shape ifNotNil: [             over := shape.            over highlight ] ]    ifNotNil: [         shape = over ifFalse: [             over unhighlight.            over := shape.            over ifNotNil: [              over highlight ] ] ]
+MDTempConnector>>highlightShapeAt: anEvent
+    |shape|
+    shape := self shapeAtPosition: anEvent.
+    over ifNil: [ 
+        shape ifNotNil: [ 
+            over := shape.
+            over highlight ] ]
+    ifNotNil: [ 
+        shape = over ifFalse: [ 
+            over unhighlight.
+            over := shape.
+            over ifNotNil: [  
+            over highlight ] ] ]
 \end{verbatim}	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
