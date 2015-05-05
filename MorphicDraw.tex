@@ -664,14 +664,12 @@ MDTempConnector>>highlightShapeAt: anEvent
             over highlight ] ] ]
 \end{verbatim}	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A more complex shape}
-Todo
 \section{Z-order}
 When adding shapes, the newest one gets to be in front. Morphs have a \#comeToFront
 and \#goBehind method to change this order. Missing are up and down.
 In the context menu add a submenu for this.
 \begin{verbatim}
-openContextMenuForHand: aHand    | menu subMenu|
+MDShape>>openContextMenuForHand: aHand    | menu subMenu|
     menu := MenuMorph new defaultTarget: self.    subMenu := MenuMorph new defaultTarget: self.     subMenu add: 'to front' selector: #comeToFront;        add: 'up' selector: #moveUp;        add: 'down' selector: #moveDown;        add: 'to back' selector: #goBehind.	    menu add: 'delete' selector: #delete;        add: 'connect' selector: #connect;        addLine;        add: 'Z-order' subMenu: subMenu.    menu items first icon: Smalltalk ui theme icons deleteIcon .    menu items second icon: MDIcons default connectorIcon .    menu popUpInWorld
 \end{verbatim}
 
