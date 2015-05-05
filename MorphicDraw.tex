@@ -667,7 +667,22 @@ MDTempConnector>>highlightShapeAt: anEvent
 \section{A more complex shape}
 Todo
 \section{Z-order}
-Todo
+When adding shapes, the newest one gets to be in front. Morphs have a \#comeToFront
+and \#goBehind method to change this order. Missing are up and down.
+In the context menu add a submenu for this.
+\begin{verbatim}
+openContextMenuForHand: aHand    | menu subMenu|
+    menu := MenuMorph new defaultTarget: self.    subMenu := MenuMorph new defaultTarget: self.     subMenu add: 'to front' selector: #comeToFront;        add: 'up' selector: #moveUp;        add: 'down' selector: #moveDown;        add: 'to back' selector: #goBehind.	    menu add: 'delete' selector: #delete;        add: 'connect' selector: #connect;        addLine;        add: 'Z-order' subMenu: subMenu.    menu items first icon: Smalltalk ui theme icons deleteIcon .    menu items second icon: MDIcons default connectorIcon .    menu popUpInWorld
+\end{verbatim}
+
+\#addMorph:asElementNumber: is guarded against adding beyond the number of 
+submorphs, and removes the morph before reading it.
+\begin{verbatim}
+MDShape>>moveDown    |ind|    ind := self owner submorphIndexOf: self.    self owner addMorph: self asElementNumber: ind + 1 
+
+MDShape>>moveUp    |ind|    ind := self owner submorphIndexOf: self.    ind > 1 ifTrue: [ self owner addMorph: self asElementNumber: ind - 1 ]
+\end{verbatim}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
 The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/MorphicDraw
