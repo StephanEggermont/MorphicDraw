@@ -680,6 +680,10 @@ MDShape>>moveDown    |ind|    ind := self owner submorphIndexOf: self.    sel
 
 MDShape>>moveUp    |ind|    ind := self owner submorphIndexOf: self.    ind > 1 ifTrue: [ self owner addMorph: self asElementNumber: ind - 1 ]
 \end{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Selections}
+Using shift-drag, a selection rectangle is created. It uses a SelectionMorph.
+That needs some overrides to be usable with MDPanel. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
