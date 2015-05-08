@@ -234,7 +234,22 @@ Spec based applications are opened by sending an instance \#openWithSpec.
 \begin{verbatim}
 SpecMorphicDraw class>>open	^self new openWithSpec
 \end{verbatim}
-
+The layout definition in Spec is on the class side
+\begin{verbatim}
+SpecMorphicDraw class>>defaultSpec    <spec: #default>	    ^ SpecLayout composed        newColumn: [ :c |             c                 add: #menu height: self toolbarHeight;                add: #panel ];        yourself
+\end{verbatim}
+On the instance side, getters for the widgets are needed. MDPanel has a default extent,
+and its spec adapter needs to know it should fill all available space.
+\begin{verbatim}
+SpecMorphicDraw>>menu
+    ^menu
+	
+SpecMorphicDraw>>panel    |morph|    morph := MDPanel new.    ^ morph asSpecAdapter        hSpaceFill;        vSpaceFill;        yourself
+\end{verbatim}
+The widgets need to be initialized. First the menu is build, then the panel is added
+\begin{verbatim}
+SpecMorphicDraw>>initializeWidgets    menu := MenuModel new        addGroup: [ :group |            group addItem: [ :item |                item                    name: nil;                    description: 'New rectangle';                    icon: MDIcons default rectangleIcon;                    action: [ MDShape new openInHand ] ].            group addItem: [ :item |                item                     name: nil;                    description: 'New card';                    icon: MDIcons default cardIcon;                    action: [ MDCard new openInHand  ] ]].		    menu applyTo: self.    self focusOrder add: self panel
+\end{verbatim} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shapes and PasteUpMorph}
 The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
