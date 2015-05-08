@@ -46,7 +46,8 @@ help creating larger applications.
 \item Glamour
 \item Spec
 \end{itemize}
-
+All three have their own documentation and examples. They can all 
+be used with MorphicDraw.
 \subsection{Using PolyMorph}
 Add a class that represents the application. It has instance variables for 
 the different parts. 
@@ -58,7 +59,7 @@ Object subclass: #MorphicDraw
     category: 'MorphicDraw-Model'
 \end{verbatim}
 
-Creating a window in Morphic is simple. Open a workspace and DoIt
+Creating a window in PolyMorph (and Morphic)  is simple. Open a workspace and DoIt
 \begin{verbatim}
 StandardWindow new openInWorld 
 \end{verbatim} 
@@ -75,7 +76,7 @@ StandardWindow new openInHand
 The window is then positioned by clicking.
 
 The MorphicDraw application uses the first, but needs to change 
-the window title. It will grow its size to fir the contents.
+the window title. It will grow its size to fit the contents.
 
 \begin{verbatim}
 MorphicDraw>>createWindow
@@ -222,6 +223,18 @@ from this pane.
 \begin{verbatim}
 browser    browser := GLMTabulator new.    browser title: 'Glamour MorphicDraw'.    browser column:#morph.    browser transmit to: #morph; andShow: [ :a |        a morph             title: 'Untitled';            morph: [MDPanel new];            act: [:text | MDShape new openInHand ] icon: MDIcons default rectangleIcon entitled: 'New rectangle';            act: [:text | MDCard new openInHand ] icon: MDIcons default cardIcon entitled: 'New card'].    ^browser
 \end{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Using Spec}
+In Spec the application is a subclass of ComposableModel and holds onto the menu toolbar
+and the panel morph.
+\begin{verbatim}
+ComposableModel subclass: #SpecMorphicDraw    instanceVariableNames: 'menu panel'    classVariableNames: ''    category: 'MorphicDraw-Model'
+\end{verbatim}
+Spec based applications are opened by sending an instance \#openWithSpec.
+\begin{verbatim}
+SpecMorphicDraw class>>open	^self new openWithSpec
+\end{verbatim}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shapes and PasteUpMorph}
 The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
