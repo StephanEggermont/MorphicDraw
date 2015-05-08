@@ -4,6 +4,8 @@ Morphic is a powerful graphics environment, used in Self, Squeak, Cuis and Pharo
 In an iterative and incremental process, build up an application that supports
 drawing connected figures.
 
+![Screenshot of MorphicDraw](https://github.com/StephanEggermont/MorphicDraw/blob/master/SimpleMorphicDrawWindow.png)
+
 MorphicDraw was created in Pharo (version 4). To load the code:
 Open the Monticello Browser. Add a new repository of type smalltalkhub.com. 
 The owner is StephanEggermont, the project is MorphicDraw. User and password are only needed
