@@ -223,6 +223,18 @@ from this pane.
 \begin{verbatim}
 browser    browser := GLMTabulator new.    browser title: 'Glamour MorphicDraw'.    browser column:#morph.    browser transmit to: #morph; andShow: [ :a |        a morph             title: 'Untitled';            morph: [MDPanel new];            act: [:text | MDShape new openInHand ] icon: MDIcons default rectangleIcon entitled: 'New rectangle';            act: [:text | MDCard new openInHand ] icon: MDIcons default cardIcon entitled: 'New card'].    ^browser
 \end{verbatim}
+The resulting glamour application (Figure \ref{glamour}) can be opened with a DoIt
+\begin{verbatim}
+GlamourMorphicDraw open
+\end{verbatim}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=200pt]{GlamourMorphicDraw.png}
+\caption{MorphicDraw in Glamour}
+\label{glamour}
+\end{center}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Using Spec}
 In Spec the application is a subclass of ComposableModel and holds onto the menu toolbar
@@ -250,6 +262,18 @@ The widgets need to be initialized. First the menu is build, then the panel is a
 \begin{verbatim}
 SpecMorphicDraw>>initializeWidgets    menu := MenuModel new        addGroup: [ :group |            group addItem: [ :item |                item                    name: nil;                    description: 'New rectangle';                    icon: MDIcons default rectangleIcon;                    action: [ MDShape new openInHand ] ].            group addItem: [ :item |                item                     name: nil;                    description: 'New card';                    icon: MDIcons default cardIcon;                    action: [ MDCard new openInHand  ] ]].		    menu applyTo: self.    self focusOrder add: self panel
 \end{verbatim} 
+The resulting spec application (Figure \ref{spec}) can be opened with a DoIt
+\begin{verbatim}
+SpecMorphicDraw open
+\end{verbatim}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=200pt]{SpecMorphicDraw.png}
+\caption{MorphicDraw in Spec}
+\label{spec}
+\end{center}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shapes and PasteUpMorph}
 The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
