@@ -11,3 +11,5 @@ when you want to commit changes to the repository. Open the repository and load 
 MorphicDraw.
 
 The application can be started by opening a workspace and DoIt: MorphicDraw open
+
+The .tex file was compiled with xeLaTeX
