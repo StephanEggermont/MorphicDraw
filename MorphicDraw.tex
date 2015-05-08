@@ -26,7 +26,7 @@ In an iterative and incremental process, build up an application that supports
 drawing connected figures.
 \end{quote} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Morphic Application}
+\section{A Morphic Application with a Window}
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=200pt]{SimpleMorphicDrawWindow.png}
@@ -39,7 +39,15 @@ with a toolbar and a drawing area. In the drawing area there are
 three graphical shapes, one of which is selected. A context menu
 for the selected shape shows options to delete it and to connect it.
 
-\subsection{An application with a window}
+There are several frameworks build on top of basic Morphic that
+help creating larger applications.
+\begin{itemize}
+\item PolyMorph
+\item Glamour
+\item Spec
+\end{itemize}
+
+\subsection{Using PolyMorph}
 Add a class that represents the application. It has instance variables for 
 the different parts. 
 
@@ -179,7 +187,41 @@ At the class side add a method to open the application
 MorphicDraw>>open
     ^self new open
 \end{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Using Glamour}
+Glamour is designed to quickly create different kinds of browsers.
+It models a browser as consisting of panes that influence each other 
+by their selection. 
 
+Create a new class
+\begin{verbatim}
+Object subclass: #GlamourMorphicDraw    instanceVariableNames: 'browser'    classVariableNames: ''    category: 'MorphicDraw-Model' 
+\end{verbatim}
+At the class side add a method to open the application
+\begin{verbatim}
+GlamourMorphicDraw class>>open    ^self new open
+\begin{verbatim}
+A glamour browser is always opened on an object. 
+Open on self, not on nil.
+\begin{verbatim}
+GlamourMorphicDraw >>open    self browser openOn: self
+\end{verbatim}
+The browser itself is constructed in several steps:
+\begin{itemize}
+\item set the title;
+\item define the (nested) rows and columns of panes.
+This one is simple with only one element in one column.
+\item for each pane, define what pane influences it. 
+A transmission has a from and to, with the transmission from
+the outside (\#openOn:) being ignored.
+\item in the andShow: block define what is to be put in the
+presentation (a). In this case, show the MDPanel morph.
+\item and finally define the actions that can be performed
+from this pane.
+\end{itemize}
+\begin{verbatim}
+browser    browser := GLMTabulator new.    browser title: 'Glamour MorphicDraw'.    browser column:#morph.    browser transmit to: #morph; andShow: [ :a |        a morph             title: 'Untitled';            morph: [MDPanel new];            act: [:text | MDShape new openInHand ] icon: MDIcons default rectangleIcon entitled: 'New rectangle';            act: [:text | MDCard new openInHand ] icon: MDIcons default cardIcon entitled: 'New card'].    ^browser
+\end{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Shapes and PasteUpMorph}
 The basic graphics entity in Morphic is a Morph. In a workspace, DoIt
