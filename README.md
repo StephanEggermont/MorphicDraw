@@ -9,7 +9,7 @@ ui frameworks in Pharo, PolyMorph, Glamour and Spec.
 
 ![Screenshot of MorphicDraw](https://github.com/StephanEggermont/MorphicDraw/blob/master/SimpleMorphicDrawWindow.png)
 
-Contents:
+##Contents:
 - A Morphic Application with a Window
   - Using PolyMorph
   - Using Glamour
@@ -25,6 +25,7 @@ Contents:
 - Selections (work in progress)
 - Loading the code
 
+##Loading the code
 MorphicDraw was created in Pharo (version 4). To load the code:
 Open the Monticello Browser. Add a new repository of type smalltalkhub.com. 
 The owner is StephanEggermont, the project is MorphicDraw. User and password are only needed
