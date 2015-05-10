@@ -9,6 +9,22 @@ ui frameworks in Pharo, PolyMorph, Glamour and Spec.
 
 ![Screenshot of MorphicDraw](https://github.com/StephanEggermont/MorphicDraw/blob/master/SimpleMorphicDrawWindow.png)
 
+Contents:
+- A Morphic Application with a Window
+  - Using PolyMorph
+  - Using Glamour
+  - Using Spec
+- Shapes and PasteUpMorph
+- Icons
+- Colors
+- Selection and resizing
+  - Corner handles
+- Context menu
+- Connecting
+- Z-order
+- Selections (work in progress)
+- Loading the code
+
 MorphicDraw was created in Pharo (version 4). To load the code:
 Open the Monticello Browser. Add a new repository of type smalltalkhub.com. 
 The owner is StephanEggermont, the project is MorphicDraw. User and password are only needed
