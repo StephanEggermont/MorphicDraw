@@ -5,13 +5,13 @@ In an iterative and incremental process, build up an application that supports
 drawing connected figures. 
 
 The application is build embedded in the three commonly available higher level 
-ui frameworks in Pharo, PolyMorph, Glamour and Spec.
+ui frameworks in Pharo, Polymorph, Glamour and Spec.
 
 ![Screenshot of MorphicDraw](https://github.com/StephanEggermont/MorphicDraw/blob/master/SimpleMorphicDrawWindow.png)
 
 ##Contents:
 - A Morphic Application with a Window
-  - Using PolyMorph
+  - Using Polymorph
   - Using Glamour
   - Using Spec
 - Shapes and PasteUpMorph
