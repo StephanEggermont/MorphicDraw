@@ -42,13 +42,13 @@ for the selected shape shows options to delete it and to connect it.
 There are several frameworks build on top of basic Morphic that
 help creating larger applications.
 \begin{itemize}
-\item PolyMorph
+\item Polymorph
 \item Glamour
 \item Spec
 \end{itemize}
 All three have their own documentation and examples. They can all 
 be used with MorphicDraw.
-\subsection{Using PolyMorph}
+\subsection{Using Polymorph}
 Add a class that represents the application. It has instance variables for 
 the different parts. 
 
@@ -59,7 +59,7 @@ Object subclass: #MorphicDraw
     category: 'MorphicDraw-Model'
 \end{verbatim}
 
-Creating a window in PolyMorph (and Morphic)  is simple. Open a workspace and DoIt
+Creating a window in Polymorph (and Morphic)  is simple. Open a workspace and DoIt
 \begin{verbatim}
 StandardWindow new openInWorld 
 \end{verbatim} 
@@ -85,10 +85,10 @@ MorphicDraw>>createWindow
         yourself.
 \end{verbatim}
 
-StandardWindow is part of PolyMorph. PolyMorph extends Morphic
+StandardWindow is part of Polymorph. Polymorph extends Morphic
 with theme-ability. PolyMorph widgets often strictly adhere to the theme,
 ignoring the Morphic-level setters for colors and borders defined in
-their superclassses.  PolyMorph makes the 
+their superclassses.  Polymorph makes the 
 Window responsible for adding predefined user interface widgets
 to the application Window. For that it uses the TEasilyThemed 
 trait. It adds a lot (163 in my current image) of convenience methods.
@@ -360,7 +360,7 @@ MDShape>>wantsToBeDroppedInto: aMorph
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Icons\label{Icons}}
 The current icons in Pharo are bitmap icons. Athens makes it possible
-to replace them by SVG, vector based icons. PolyMorph adds the 
+to replace them by SVG, vector based icons. Polymorph adds the 
 ThemeIcons class to make it easy to manage an applications' icons.
 In this class a number of utility functions are defined to load and save
 icons in png format. 
