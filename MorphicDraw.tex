@@ -667,8 +667,10 @@ PolygonMorph subclass: #MDConnector
     classVariableNames: ''
     category: 'MorphicDraw-Model'
 \end{verbatim}
-It needs to be configured as a line-based polygon, not a
-closed figure.
+A PolygonMorph supports both open 
+figures and closed ones.Here it needs to be configured 
+as a line-based polygon. It also supports both
+smooth curves and ones with corners.
 \begin{verbatim}
 MDConnector>>initialize
     super initialize.
