@@ -485,6 +485,7 @@ MDShape>>initialize
     connectors := OrderedCollection new.
     handles := OrderedCollection new.
     self on: #mouseUp send: #changeSelected to: self.
+    self on: #mouseDown send: #startDrag:with: to: self.
     self on: #mouseMove send: #doDrag:with: to: self
 \end{verbatim}
 A new MDShape is not selected and not highlighted.
@@ -493,10 +494,23 @@ The selection will be changed on \#mouseUp and
 the handles might have to be moved on \#mouseMove.
 On \#mouseUp, the selection is changed and the shape
 updates itself. 
+\subsubsection{Constraining the drag to the panel}
+On \#mouseDown, a drag might be started
+and  that needs to be constrained to the panel.
+The shape needs to know where the hand is dragging it. 
+\begin{verbatim}
+MDShape>>startDrag: evt with: dragHandle    "Drag my target without removing it from its owner."    super startDrag: evt with: dragHandle.    ActiveHand addEventListener: self.
+\end{verbatim}
+and then
+\begin{verbatim}
+MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    self setConstrainedPosition: aMouseMoveEvent position - (self extent /2)hangOut: false.	
+\end{verbatim}
+
 \begin{verbatim}
 MDShape>>changeSelected
     selected := selected not.
     self updateSelection. 
+    ActiveHand removeEventListener: self.
 \end{verbatim}
 The color is changed to the color representing the 
 selection state. Highlighting color dominates this color.
