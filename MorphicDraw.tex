@@ -1,18 +1,32 @@
-\documentclass[10pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
-\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\documentclass[10pt, twoside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[innermargin=3in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
 \usepackage[english]{babel}
 \geometry{a4paper}                   		% ... or a4paper or a5paper or ... 
 %\geometry{landscape}                		% Activate for for rotated page geometry
 %\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}				% Use pdf, png, jpg, or epsß with pdflatex; use eps in DVI mode
 \usepackage{fontspec}
-\usepackage{multicol}
 \setmainfont{Arial}
 					
 \linespread{1.1}			% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{amssymb}
 \usepackage{eurosym}
 \usepackage{colortbl}
+\usepackage{titlesec}
+\titleformat{\section}[block]%
+  {\normalfont\scshape\filright}%
+  {\makebox[2em][l]{\thesection}}%
+  {1em}
+  {}[\color{blue}{\titlerule}]
+\titlespacing{\section}{-3em}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titleformat{\subsection}[block]%
+  {\color{blue}{\normalfont\scshape\filright}}%
+  {\makebox[2em][l]{\color{blue}{\thesubsection}}}%
+  {1em}
+ {}
+ 
+
+
 \title{MorphicDraw}
 \author{Stephan J.C. Eggermont, Sensus}
 \begin{document}
@@ -59,7 +73,7 @@ Object subclass: #MorphicDraw
     category: 'MorphicDraw-Model'
 \end{verbatim}
 
-Creating a window in Polymorph (and Morphic)  is simple. Open a workspace and DoIt
+Creating a window in Polymorph is as simple as in Morphic. Open a workspace and DoIt
 \begin{verbatim}
 StandardWindow new openInWorld 
 \end{verbatim} 
@@ -74,7 +88,12 @@ DoIt:
 StandardWindow new openInHand 
 \end{verbatim} 
 The window is then positioned by clicking.
-
+\reversemarginpar
+\marginpar{
+StandardWindow is the default entry point for Polymorph. It is a
+subclass of SystemWindow. It adds support for the current UITheme,
+running full-screen and adds a lot of factory methods to add 
+(Poly)Morphs to the window.}
 The MorphicDraw application uses the first, but needs to change 
 the window title. It will grow its size to fit the contents.
 
@@ -146,7 +165,8 @@ sticks to one edge of the Morph that it is added to.
 \begin{verbatim}
 MorphicDraw>>createToolBar
     tools := window newToolbar: 
-        (Array with: self createNewRectangleButton with: self createNewCardButton).
+        (Array with: self createNewRectangleButton 
+            with: self createNewCardButton).
     dock := window newToolDockingBar.
     dock addMorph: tools
 \end{verbatim}
@@ -221,7 +241,11 @@ presentation (a). In this case, show the MDPanel morph.
 from this pane.
 \end{itemize}
 \begin{verbatim}
-browser    browser := GLMTabulator new.    browser title: 'Glamour MorphicDraw'.    browser column:#morph.    browser transmit to: #morph; andShow: [ :a |        a morph             title: 'Untitled';            morph: [MDPanel new];            act: [:text | MDShape new openInHand ] icon: MDIcons default rectangleIcon entitled: 'New rectangle';            act: [:text | MDCard new openInHand ] icon: MDIcons default cardIcon entitled: 'New card'].    ^browser
+browser    browser := GLMTabulator new.    browser title: 'Glamour MorphicDraw'.    browser column:#morph.    browser transmit to: #morph; andShow: [ :a |        a morph             title: 'Untitled';            morph: [MDPanel new];            act: [:text | MDShape new openInHand ] 
+                icon: MDIcons default rectangleIcon 
+                entitled: 'New rectangle';            act: [:text | MDCard new openInHand ] 
+                icon: MDIcons default cardIcon 
+                entitled: 'New card'].    ^browser
 \end{verbatim}
 The resulting glamour application (Figure \ref{glamour}) can be opened with a DoIt
 \begin{verbatim}
@@ -503,7 +527,8 @@ MDShape>>startDrag: evt with: dragHandle    "Drag my target without removing it
 \end{verbatim}
 and then
 \begin{verbatim}
-MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    self setConstrainedPosition: aMouseMoveEvent position - (self extent /2)hangOut: false.	
+MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    self setConstrainedPosition: aMouseMoveEvent position - (self extent /2)
+        hangOut: false.	
 \end{verbatim}
 
 \begin{verbatim}
@@ -605,7 +630,8 @@ MDCornerHandle>>mouseMove: evt
     self reframedTo: evt position
 
 MDCornerHandle>>reframedTo: aPoint	
-    subject bounds: (subject bounds withSideOrCorner: corner setToPoint: aPoint).
+    subject bounds: (subject bounds withSideOrCorner: corner 
+        setToPoint: aPoint).
     subject moved.
     subject positionCorners
 \end{verbatim}
