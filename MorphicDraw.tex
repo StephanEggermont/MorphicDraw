@@ -90,10 +90,13 @@ StandardWindow new openInHand
 The window is then positioned by clicking.
 \reversemarginpar
 \marginpar{
+{\color{blue}{\hrule}}{\  }\\[1ex]
+\small
 StandardWindow is the default entry point for Polymorph. It is a
 subclass of SystemWindow. It adds support for the current UITheme,
 running full-screen and adds a lot of factory methods to add 
-(Poly)Morphs to the window.}
+(Poly)Morphs to the window.\\
+\color{blue}{\hrule}}
 The MorphicDraw application uses the first, but needs to change 
 the window title. It will grow its size to fit the contents.
 
@@ -529,7 +532,8 @@ MDShape>>startDrag: evt with: dragHandle    "Drag my target without removing it
 \end{verbatim}
 and then
 \begin{verbatim}
-MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    self setConstrainedPosition: aMouseMoveEvent position - (self extent /2)
+MDShape>>doDrag: aMouseMoveEvent with: aMDShape     ActiveHand addEventListener: self.    self setConstrainedPosition: 
+            aMouseMoveEvent position - (self extent /2)
         hangOut: false.	
 \end{verbatim}
 
