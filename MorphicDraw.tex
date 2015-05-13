@@ -1,5 +1,5 @@
 \documentclass[10pt, twoside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
-\usepackage[innermargin=3in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\usepackage[innermargin=3in, top=0.75in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
 \usepackage[english]{babel}
 \geometry{a4paper}                   		% ... or a4paper or a5paper or ... 
 %\geometry{landscape}                		% Activate for for rotated page geometry
@@ -177,9 +177,11 @@ MorphicDraw>>open
      self createToolBar.
      window
          addMorph: dock
-            fullFrame: ((0@0 corner: 1@0) asLayoutFrame bottomOffset: dock minExtent y);
+            fullFrame: ((0@0 corner: 1@0) asLayoutFrame 
+                bottomOffset: dock minExtent y);
         addMorph: MDPanel new 			
-            fullFrame: ((0@0 corner: 1@1) asLayoutFrame topOffset: dock minExtent y).
+            fullFrame: ((0@0 corner: 1@1) asLayoutFrame 
+                topOffset: dock minExtent y).
     ^window openInWorld.
 \end{verbatim}
 Some morphs automatically lay out their submorphs when they are added,
@@ -662,7 +664,8 @@ The context menu is shown when the right button has been clicked.
 No further propagation of the event is wanted.
 \begin{verbatim}
 MDShape>>click: evt
-    "Default behavior: Show a context menu if right mouse button was clicked."
+    "Default behavior: Show a context menu if right mouse button 
+    was clicked."
 	
     evt yellowButtonPressed ifTrue: [
         self openContextMenuForHand: evt hand.
