@@ -55,6 +55,25 @@ to the panel. Each element is a square of 30*30 pixels. An element can
 start a drag action where a copy of the element is dragged to a Morph that
 wants to receive it. The default action for dragging a color is setting the color
 of the Morph, for dragging an avatar it is setting the email.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A Drag Well}
+A DragWell is a small square widget. The default size is 30 px. It is derived from a 
+BorderedMorph as a a border might be shown.
+
+\begin{verbatim}
+BorderedMorph subclass: #DragWell
+    instanceVariableNames: 'panel over dropSelector clickSelector'
+    classVariableNames: ''
+    category: 'DragPanels'
+\end{verbatim} 
+The default border can be white and 1 px
+\begin{verbatim}
+DragWell>>defaultBorderColor    ^Color white
+
+DragWell>>defaultBorderWidth    ^1
+
+DragWell>>defaultBounds    ^0@0 corner: 30@30
+\end{verbatim}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
