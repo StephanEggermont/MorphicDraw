@@ -68,13 +68,29 @@ BorderedMorph subclass: #DragWell
 \end{verbatim} 
 The default border can be white and 1 px
 \begin{verbatim}
-DragWell>>defaultBorderColor    ^Color white
+DragWell>>defaultBorderColor
+    ^Color white
 
-DragWell>>defaultBorderWidth    ^1
+DragWell>>defaultBorderWidth
+    ^1
 
-DragWell>>defaultBounds    ^0@0 corner: 30@30
+DragWell>>defaultBounds
+    ^0@0 corner: 30@30
 \end{verbatim}
 
+\section{Copying a Morph}
+
+A DragWell keeps a reference to the DragPanel it belongs to. This is stored 
+in the panel instance variable. When Morphs are copied, they are by default copied very deep.
+We expect all nested submorphs to be copied too. For some instance variables that is unwanted.
+A link to a parent object is typically something that should be either shallow copied, so the reference 
+remains to the same parent object, or it should be nilled or set to some default value. To make sure 
+that that is what happens when copying a DragWell, there are two methods that potentially need 
+to be created: veryDeepInner: and veryDeepFixupWith:. Here, we just want a shallow copy of 
+all instance variables
+
+\begin{verbatim}
+DragWell>>veryDeepInner: deepCopier        super veryDeepInner: deepCopier.\end{verbatim}	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
