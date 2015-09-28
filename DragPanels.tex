@@ -92,6 +92,18 @@ all instance variables
 \begin{verbatim}
 DragWell>>veryDeepInner: deepCopier        super veryDeepInner: deepCopier.\end{verbatim}	
 
+\section{Hovering}
+The DragWell responds to mouse actions. To show that it does so, we want to give feedback
+when the mouse is over the DragWell. 
+
+\begin{verbatim}
+DragWell>>mouseEnter: evt        "Handle a mouseEnter event, meaning the mouse 
+         just entered my bounds with no button pressed."        super mouseEnter: evt.        self over: true
+
+DragWell>>mouseLeave: evt        "Handle a mouseLeave event, meaning the mouse 
+         just left my bounds with no button pressed."        super mouseLeave: evt.        self over: false
+\end{verbatim}	
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Loading the code}
 The code can be found on www.smalltalkhub.com, in the repository StephanEggermont/DragPanels
